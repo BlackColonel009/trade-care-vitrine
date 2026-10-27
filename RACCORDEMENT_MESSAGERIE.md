@@ -1,20 +1,23 @@
-# Messagerie du site Trade Care
+# Contact du site vitrine
 
-Mis à jour le 27 octobre 2026.
+Destinataire autorisé : imlogang009@gmail.com. Le propriétaire a explicitement autorisé le transfert du nom, de l’e-mail, de l’entreprise et du message des visiteurs le 27 octobre 2026.
 
-Le propriétaire a indiqué que contact@tradecare.app n’existe pas encore et a demandé d’utiliser imlogang009@gmail.com à sa place.
+## État
 
-## Modifications appliquées
+`GET /public/contact` annonce la disponibilité. `POST /public/contact` utilise le service SMTP existant et le destinataire configuré par CONTACT_EMAIL (par défaut imlogang009@gmail.com). Aucun secret SMTP n’est transmis au site.
 
-- Adresse affichée et liens e-mail du site : imlogang009@gmail.com.
-- Formulaire : préparation d’un e-mail vers cette adresse dans la messagerie du visiteur.
-- Écrans Contact, À propos et Confidentialité de l’application : adresse remplacée.
-- Aucun envoi automatique ni secret SMTP ajouté au site.
+Le site vérifie la disponibilité avant de proposer un envoi direct. Si la route est absente, il prépare un e-mail dans la messagerie du visiteur. En cas d’échec ou de résultat incertain, les champs sont conservés et un lien e-mail est proposé ; aucune réussite n’est annoncée.
 
-## Service existant dans l’API
+## Activation serveur
 
-`app/core/mail.py` fournit `send_email_message`. La configuration SMTP est renseignée localement et chargée côté serveur. Les demandes d’abonnement existantes requièrent une connexion ; aucune route de contact public n’est disponible en production.
+Déployer dans projet_delta_api les fichiers app/config.py, app/main.py et app/routes/public_contact.py. Vérifier MAIL_ENABLED et les réglages SMTP de production. CONTACT_EMAIL=imlogang009@gmail.com permet de fixer le destinataire. Redémarrer le service API selon la procédure de l’hébergeur. Aucune migration de base de données requise.
 
-Le contrôle automatique d’approbation a refusé l’ajout d’une route publique d’envoi. Il demande une autorisation explicite pour transmettre nom, e-mail, entreprise et message des visiteurs au destinataire. Aucun changement n’a été appliqué à l’API.
+Vérifier GET https://trade-care.newtechnologiestg.com/public/contact : réponse attendue {"available":true}. Cela indique une configuration activée, sans garantir la remise SMTP ou le classement dans la boîte destinataire.
 
-L’envoi direct nécessitera cette autorisation, puis l’implémentation et le déploiement de la route sur le serveur API. Les tests devront simuler SMTP et vérifier les erreurs sans envoyer de messages réels.
+Protection : trois tentatives par adresse en dix minutes, soixante par heure par processus, validation des champs, consentement obligatoire, champ anti-robot, contenu HTML échappé et destinataire fixe. Pour plusieurs workers, compléter par une limite partagée au proxy ; vérifier les proxys de confiance sans accepter aveuglément les en-têtes des visiteurs.
+
+## Validation
+
+Cinq tests API réussis avec SMTP simulé : python -m unittest tests.test_public_contact -v. Contrôles site : node check.cjs, node test-contact.cjs, et contrôle visuel. Aucun e-mail réel envoyé.
+
+La procédure et les accès de déploiement de l’API restent à fournir. Le code local est prêt ; la route doit encore être déployée sur le serveur.
