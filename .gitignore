@@ -1,2 +1,7 @@
 node_modules/
 site-deploy.tar.gz
+__pycache__/
+*.py[cod]
+.venv/
+preview.*.log
+preview.*.log

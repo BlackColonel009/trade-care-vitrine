@@ -1,0 +1,36 @@
+# Mode recommandé : Nginx sert directement le dossier dist, sans Python.
+# Remplacer www.tradecare.example et tradecare.example par le domaine du site.
+server {
+    listen 80;
+    listen [::]:80;
+    server_name tradecare.example www.tradecare.example;
+
+    root /var/www/trade-care-vitrine/dist;
+    index index.html;
+
+    access_log /var/log/nginx/trade-care-vitrine.access.log;
+    error_log /var/log/nginx/trade-care-vitrine.error.log;
+
+    location = / {
+        try_files /index.html =404;
+    }
+
+    location / {
+        try_files $uri $uri.html $uri/ =404;
+    }
+
+    location ~* \.(?:css|js|png|jpg|jpeg|gif|webp|svg|ico|json)$ {
+        try_files $uri =404;
+        expires 7d;
+        add_header Cache-Control "public, max-age=604800, immutable";
+    }
+
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "camera=(), microphone=(), geolocation=()" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://trade-care.newtechnologiestg.com; form-action 'self' mailto:; frame-ancestors 'self'; base-uri 'self'" always;
+
+    gzip on;
+    gzip_types text/plain text/css application/javascript application/json image/svg+xml;
+}

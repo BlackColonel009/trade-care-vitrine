@@ -32,3 +32,4 @@ const contact=`<section class="wrap page-hero"><span class="eyebrow">PARLONS DE 
 fs.writeFileSync(path.join(out,'contact.html'),page('Contact et présentation de projet','contact',contact));
 fs.writeFileSync(path.join(out,'catalog-labels.json'),JSON.stringify(labels));
 console.log('4 pages, catalogue et contenus générés.');
+require('./sync-fastapi.cjs')();

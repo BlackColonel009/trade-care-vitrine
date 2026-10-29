@@ -1,0 +1,19 @@
+[Unit]
+Description=Trade Care website
+After=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/trade-care-vitrine
+Environment=PYTHONUNBUFFERED=1
+ExecStart=/var/www/trade-care-vitrine/.venv/bin/gunicorn app.main:app --workers 2 --worker-class uvicorn.workers.UvicornWorker --bind 127.0.0.1:8010 --access-logfile - --error-logfile - --timeout 45
+Restart=on-failure
+RestartSec=5
+PrivateTmp=true
+ProtectSystem=full
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
