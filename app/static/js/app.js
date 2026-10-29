@@ -58,3 +58,41 @@ if(form){
   finally{busy=false;submit.disabled=false;submit.textContent='Envoyer ma demande ↗'}
  });
 }
+
+const downloadCards=document.getElementById('download-cards');
+if(downloadCards){
+ const downloadStatus=document.getElementById('download-status');
+ const platformDetails={
+  android:{title:'Trade Care pour Android',subtitle:'Application Android · fichier APK',icon:'◆',action:'Télécharger l’APK'},
+  windows:{title:'Trade Care pour Windows',subtitle:'Application de bureau · Windows',icon:'▦',action:'Télécharger pour Windows'}
+ };
+ const validRelease=(value,platform)=>value&&typeof value==='object'&&value.platform===platform&&typeof value.enabled==='boolean';
+ const safeHttps=value=>{try{const url=new URL(String(value));return url.protocol==='https:'?url.href:null}catch{return null}};
+ const dateLabel=value=>{const date=new Date(value);return Number.isNaN(date.getTime())?'':date.toLocaleDateString('fr-FR',{day:'2-digit',month:'long',year:'numeric'})};
+ function releaseCard(platform,release){
+  const details=platformDetails[platform];
+  const url=safeHttps(release.download_url);
+  if(!release.enabled||!url)return '';
+  const meta=[];
+  if(release.version)meta.push('Version '+escapeHtml(release.version));
+  if(release.file_size_label)meta.push(escapeHtml(release.file_size_label));
+  if(release.published_at)meta.push(dateLabel(release.published_at));
+  const checksum=typeof release.sha256==='string'&&/^[0-9a-f]{64}$/i.test(release.sha256)?release.sha256.toLowerCase():'';
+  return `<article class="download-card"><div class="download-card-head"><span class="download-icon" aria-hidden="true">${details.icon}</span><div><small>${details.subtitle}</small><h3>${details.title}</h3></div></div>${meta.length?`<p class="download-meta">${meta.filter(Boolean).join(' · ')}</p>`:''}${release.release_notes?`<p class="download-notes">${escapeHtml(release.release_notes)}</p>`:''}<a class="btn" href="${escapeHtml(url)}" target="_blank" rel="noopener noreferrer">${details.action} <span>↓</span></a>${checksum?`<details class="checksum"><summary>Vérifier l’intégrité du fichier</summary><code>${checksum}</code></details>`:''}</article>`;
+ }
+ async function loadDownloads(){
+  try{
+   const response=await fetch('https://trade-care.newtechnologiestg.com/app-downloads/public',{signal:AbortSignal.timeout(6000)});
+   if(!response.ok)throw Error('remote');
+   const data=await response.json();
+   if(!validRelease(data.android,'android')||!validRelease(data.windows,'windows'))throw Error('schema');
+   const cards=['android','windows'].map(platform=>releaseCard(platform,data[platform])).filter(Boolean);
+   downloadCards.innerHTML=cards.length?cards.join(''):'<div class="download-empty"><span>↗</span><h3>Les téléchargements seront bientôt disponibles.</h3><p>Les versions publiques ne sont pas encore activées. Contactez Trade Care si vous souhaitez être prévenu.</p><a class="text-link" href="/contact">Contacter l’équipe →</a></div>';
+   downloadStatus.textContent=cards.length?'Téléchargez uniquement depuis cette page officielle. Vérifiez la version et l’empreinte SHA-256 lorsqu’elle est fournie.':'Aucune version publique activée pour le moment.';
+  }catch{
+   downloadCards.innerHTML='<div class="download-empty"><span>!</span><h3>Impossible de vérifier les téléchargements.</h3><p>Le service est momentanément indisponible. Aucun lien non vérifié ne sera proposé.</p><a class="text-link" href="/contact">Contacter Trade Care →</a></div>';
+   downloadStatus.textContent='Réessayez plus tard ou contactez l’équipe Trade Care.';
+  }finally{downloadCards.setAttribute('aria-busy','false')}
+ }
+ loadDownloads();
+}

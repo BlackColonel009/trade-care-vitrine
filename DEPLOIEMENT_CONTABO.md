@@ -102,6 +102,22 @@ sudo journalctl -u trade-care-vitrine -n 100 --no-pager
 
 ## Dépendance API à déployer
 
+La section de téléchargement dépend de la migration API
+`j7g8h9i0j1k2_app_download_settings.py` et de la route `/app-downloads/public`.
+Sur le serveur API, exécuter après le `git pull` :
+
+```bash
+cd /var/www/tradecare-api
+source venv/bin/activate
+alembic upgrade head
+sudo systemctl restart tradecare-api
+curl https://trade-care.newtechnologiestg.com/app-downloads/public
+```
+
+Le nom exact du service systemd peut différer sur le serveur. La réponse doit
+contenir les objets `android` et `windows` avant d’activer les liens depuis
+l’application.
+
 Le catalogue public répond déjà. Au 29 octobre 2026, la route
 `/public/contact` renvoie encore `404` sur l'API de production. Le site reste
 utilisable grâce au repli vers la messagerie, mais l'envoi direct depuis le

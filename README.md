@@ -62,6 +62,19 @@ ressources de `app/` afin d'éviter deux versions différentes du site.
 
 Les coordonnées et descriptions viennent du code de l’application. Les modules spécialisés dépendent du métier et des accès. Les conditions commerciales restent à confirmer avec l’équipe.
 
+## Téléchargements Android et Windows
+
+La page d’accueil charge les versions publiées depuis
+`https://trade-care.newtechnologiestg.com/app-downloads/public`. Les liens ne
+sont affichés que lorsqu’ils sont activés et utilisent HTTPS. Le super
+administrateur les configure dans l’application Trade Care depuis
+`Paramètres → Administration Trade Care → Téléchargements de l’application`.
+
+La version, la taille, la date de publication, les notes et l’empreinte
+SHA-256 sont également affichées lorsqu’elles sont renseignées. L’absence de
+version ou une indisponibilité de l’API produit un état explicite sans exposer
+de lien non vérifié.
+
 ## Contact direct
 
 Le formulaire utilise la route publique /public/contact si elle est disponible. Sinon, il prépare un e-mail. Voir RACCORDEMENT_MESSAGERIE.md pour la configuration et la mise en service de la route API. Vérification : node test-contact.cjs.
