@@ -10,6 +10,7 @@
     "max_products": 100,
     "max_clients": 100,
     "max_invoices_per_month": 20,
+    "max_invoice_shares_per_month": 5,
     "features": [
       "sales_purchases",
       "basic_invoice",
@@ -33,6 +34,7 @@
     "max_products": 1000,
     "max_clients": 1000,
     "max_invoices_per_month": 200,
+    "max_invoice_shares_per_month": 50,
     "features": [
       "advanced_exports",
       "financial_dashboard",
@@ -60,6 +62,7 @@
     "max_products": 10000,
     "max_clients": null,
     "max_invoices_per_month": null,
+    "max_invoice_shares_per_month": 250,
     "features": [
       "sales_purchases",
       "professional_invoice",
@@ -95,6 +98,7 @@
     "max_products": null,
     "max_clients": null,
     "max_invoices_per_month": null,
+    "max_invoice_shares_per_month": null,
     "features": [
       "sales_purchases",
       "professional_invoice",

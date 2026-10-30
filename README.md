@@ -58,7 +58,7 @@ ressources de `app/` afin d'éviter deux versions différentes du site.
 
 ## Abonnements
 
-`dist/plans.json` est un instantané du catalogue public vérifié le 27 octobre 2026. Bronze Classic comprend 3 collaborateurs dans le catalogue en ligne, contrairement aux 2 de la migration initiale. La page tente une actualisation depuis `/subscriptions/plans/public` sur le domaine API de Trade Care, avec validation et repli sur cet instantané. Les tarifs sont également pré-rendus pour rester lisibles sans JavaScript. Le formulaire de contact prépare un e-mail dans la messagerie du visiteur ; aucun envoi serveur.
+La page interroge directement `https://trade-care.newtechnologiestg.com/subscriptions/plans/public` à chaque ouverture, sans cache navigateur. Les prix mensuels et annuels, descriptions, quotas, fonctionnalités, ordre, mise en avant et visibilité proviennent donc des réglages du superadministrateur dans Trade Care. `dist/plans.json` n’est plus qu’un catalogue de secours clairement signalé lorsque l’API est indisponible. Le formulaire de contact synchronise lui aussi sa liste d’offres avec cette route publique.
 
 Les coordonnées et descriptions viennent du code de l’application. Les modules spécialisés dépendent du métier et des accès. Les conditions commerciales restent à confirmer avec l’équipe.
 

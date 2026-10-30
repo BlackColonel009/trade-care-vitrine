@@ -29,7 +29,7 @@ function adaptTemplate(html) {
     .replaceAll('href="assets/logo.png"', 'href="/static/img/logo.png"')
     .replaceAll('src="assets/logo.png"', 'src="/static/img/logo.png"')
     .replaceAll('href="style.css"', 'href="/static/css/style.css"')
-    .replaceAll('src="app.js"', 'src="/static/js/app.js"')
+    .replaceAll('src="app.js', 'src="/static/js/app.js')
     .replaceAll('href="index.html', 'href="/')
     .replaceAll('href="fonctionnalites.html', 'href="/fonctionnalites')
     .replaceAll('href="abonnements.html', 'href="/abonnements')
@@ -38,10 +38,10 @@ function adaptTemplate(html) {
 
 function adaptJavascript(source) {
   return source
-    .replaceAll("fetch('plans.json')", "fetch('/static/data/plans.json')")
+    .replaceAll("fetch('plans.json'", "fetch('/static/data/plans.json'")
     .replaceAll(
-      "fetch('catalog-labels.json')",
-      "fetch('/static/data/catalog-labels.json')",
+      "fetch('catalog-labels.json'",
+      "fetch('/static/data/catalog-labels.json'",
     )
     .replaceAll('href="contact.html?', 'href="/contact?')
     .replaceAll('href="contact.html"', 'href="/contact"');
